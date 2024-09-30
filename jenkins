@@ -10,23 +10,22 @@ pipeline {
         stage('Setup Environment') {
             steps {
                 echo "Creating virtual environment..."
-                // Create a Python virtual environment (use double backslashes for paths in Windows)
-                bat 'C:\Users\saali\AppData\Local\Microsoft\WindowsApps\python.exe'
+                // Use double backslashes to escape them in Groovy
+                bat 'C:\\Users\\saali\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe -m venv venv'
                 
                 echo "Activating virtual environment..."
-                // Activate virtual environment (no need for double backslashes here)
+                // No need to escape in this command, but make sure to use double backslashes if necessary
                 bat 'call venv\\Scripts\\activate.bat'
                 
                 echo "Installing dependencies..."
                 // Install dependencies from requirements.txt
-                bat 'C:\\Users\\Windows\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\pip.exe install -r requirements.txt'
+                bat 'C:\\Users\\saali\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe -m pip install -r requirements.txt'
             }
         }
         stage('Run Tests') {
             steps {
                 echo "Running tests..."
-                // Add your test commands here, e.g., pytest, unittest, etc.
-                // If you're using pytest:
+                // Example of running tests
                 bat 'venv\\Scripts\\python.exe -m pytest'
             }
         }
@@ -34,7 +33,7 @@ pipeline {
             steps {
                 echo "Deploying application..."
                 // Add your deployment commands here
-                // Example: bat 'deploy_script.bat' or bat 'venv\\Scripts\\python.exe deploy.py'
+                // Example: bat 'venv\\Scripts\\python.exe deploy.py'
             }
         }
     }
