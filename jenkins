@@ -4,28 +4,25 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout code from Git (Replace with your actual Git URL)
-                git url: 'https://github.com/celim019/pipeline.git'  // Change this to your actual repository URL
+                git url: 'https://github.com/celim019/pipeline.git'
             }
         }
         stage('Setup Environment') {
             steps {
                 echo "Creating virtual environment..."
-                // Use double backslashes to escape them in Groovy
-                bat 'C:\\Users\\saali\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe -m venv venv'
+                // Replace with the correct Python executable path
+                bat 'C:\\Users\\saali\\AppData\\Local\\Programs\\Python\\Python312\\python.exe -m venv venv'
                 
                 echo "Activating virtual environment..."
-                // No need to escape in this command, but make sure to use double backslashes if necessary
                 bat 'call venv\\Scripts\\activate.bat'
                 
                 echo "Installing dependencies..."
-                // Install dependencies from requirements.txt
-                bat 'C:\\Users\\saali\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe -m pip install -r requirements.txt'
+                bat 'venv\\Scripts\\pip.exe install -r requirements.txt'
             }
         }
         stage('Run Tests') {
             steps {
                 echo "Running tests..."
-                // Example of running tests
                 bat 'venv\\Scripts\\python.exe -m pytest'
             }
         }
@@ -33,14 +30,12 @@ pipeline {
             steps {
                 echo "Deploying application..."
                 // Add your deployment commands here
-                // Example: bat 'venv\\Scripts\\python.exe deploy.py'
             }
         }
     }
     post {
         always {
             echo "Cleaning up workspace..."
-            // Clean up the workspace after build (optional)
             cleanWs()
         }
     }
