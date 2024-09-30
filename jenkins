@@ -1,69 +1,48 @@
-pipeline{
-    agent any 
-
-    environment {
-        PYTHON_ENV = 'venv'     // Virtual Environment for Python
-        
-    }
+pipeline {
+    agent any
     stages {
-        // Stage 1: Clone the repository
-        stage('Checkout'){
-            steps{
-                echo 'Cloneing repository...'
-                git branch: 'main', url: 'https://github.com/celim019/pipeline.git'
+        stage('Checkout') {
+            steps {
+                // Checkout code from Git (Replace with your actual Git URL)
+                git url: 'https://github.com/celim019/pipeline.git'  // Change this to your actual repository URL
             }
         }
-
-        // Stage 2: Set up the Python enviroment
-
         stage('Setup Environment') {
             steps {
-                echo 'Setting up python virtula enviroment...'
-                sh '''
-                python3 -m venv ${PYTHON_ENV}      # create a virtual environment
-                source ${PYTHON_ENV}/bin/activate   # Activate the virtual environment
-                pip install -r requirements.txt   # Install dependencies
-                '''
+                echo "Creating virtual environment..."
+                // Create a Python virtual environment (use double backslashes for paths in Windows)
+                bat 'C:\\Users\\Windows\\AppData\\Local\\Programs\\Python\\Python312\\python.exe -m venv venv'
+                
+                echo "Activating virtual environment..."
+                // Activate virtual environment (no need for double backslashes here)
+                bat 'call venv\\Scripts\\activate.bat'
+                
+                echo "Installing dependencies..."
+                // Install dependencies from requirements.txt
+                bat 'C:\\Users\\Windows\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\pip.exe install -r requirements.txt'
             }
         }
-
-        // Stage 3: Run the tests
         stage('Run Tests') {
             steps {
-                echo 'Running unit tests...'
-                sh  '''
-                source ${PYTHON_ENV}/vin/activate
-                pytest tests/
-                '''
+                echo "Running tests..."
+                // Add your test commands here, e.g., pytest, unittest, etc.
+                // If you're using pytest:
+                bat 'venv\\Scripts\\python.exe -m pytest'
             }
-            
         }
-
-        // Stage 4: Deploy (this could be to a local http server, for example)
         stage('Deploy') {
             steps {
-                echo 'Deploying application...'
-                // In this example, we'll simulate deployment by copying the code to a server directory
-                sh '''
-                cp -r * /path/to/local/http/server/root/  # Copy the app to the deployment directory
-                '''
+                echo "Deploying application..."
+                // Add your deployment commands here
+                // Example: bat 'deploy_script.bat' or bat 'venv\\Scripts\\python.exe deploy.py'
             }
         }
-
-
-        
     }
-}
-
-post {
-    always {
-        echo 'Cleaning up workspace...'
-        cleanWs()     // Clean the workspace after the pipeline execution
-    }
-    success {
-        echo 'Pipeline completed successfully!'
-    }
-    failure {
-        echo 'Pipeline failed!'
+    post {
+        always {
+            echo "Cleaning up workspace..."
+            // Clean up the workspace after build (optional)
+            cleanWs()
+        }
     }
 }
